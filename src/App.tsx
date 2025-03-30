@@ -26,6 +26,7 @@ export default function App() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [selectedFilters, setSelectedFilters] = useState<number[]>([]);
   const [searchInput, setSearchInput] = useState<string>('');
+  const [sortOption, setSortOption] = useState<string>('');
 
   const inputRefs = useRef<HTMLInputElement[]>([]);
 
@@ -56,8 +57,28 @@ export default function App() {
     setSearchInput(value);
   }
 
+  function sortBy(event: ChangeEvent<HTMLSelectElement>) {
+    const { value } = event.target;
+
+    setSortOption(value);
+  }
+
+  function showSortOption(option: string, data: Player[]) {
+    if (option === 'desc') {
+      data.sort((a, b) => b.profile.lastName.localeCompare(a.profile.lastName));
+    } else {
+      data.sort((a, b) => a.profile.lastName.localeCompare(b.profile.lastName));
+    }
+  }
+
   useEffect(() => {
-    setPlayers(playersData);
+    console.log(sortOption);
+    setPlayers(
+      playersData.sort((a, b) =>
+        a.profile.lastName.localeCompare(b.profile.lastName)
+      )
+    );
+
     if (searchInput.length > 0) {
       setPlayers((prev) =>
         prev.filter((player) => {
@@ -72,12 +93,13 @@ export default function App() {
         })
       );
     }
+
     if (selectedFilters.length > 0) {
       setPlayers((prev) =>
         prev.filter((player) => selectedFilters.includes(player.sportId))
       );
     }
-  }, [searchInput, selectedFilters]);
+  }, [searchInput, selectedFilters, sortOption]);
 
   return (
     <Grid>
@@ -90,7 +112,12 @@ export default function App() {
         searchInput={searchInput}
         searchResults={searchResults}
       />
-      <PlayersList players={players} setPlayers={setPlayers} />
+      <PlayersList
+        players={players}
+        setPlayers={setPlayers}
+        sortOption={sortOption}
+        sortBy={sortBy}
+      />
     </Grid>
   );
 }

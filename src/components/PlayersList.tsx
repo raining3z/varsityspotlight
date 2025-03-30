@@ -20,11 +20,11 @@ const MainContent = styled.main`
 
 const SortRow = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: end;
   margin-bottom: 1rem;
 `;
 
-const Sortby = styled.div``;
+const SortByField = styled.div``;
 
 const ProductGrid = styled.div`
   display: grid;
@@ -35,6 +35,8 @@ const ProductGrid = styled.div`
 interface PlayersListProps {
   players: Player[];
   setPlayers: Dispatch<SetStateAction<Player[]>>;
+  sortOption: string;
+  sortBy: (event: ChangeEvent<HTMLSelectElement>) => void;
 }
 
 type PlayerData = Omit<Player, 'id'>;
@@ -50,8 +52,14 @@ const defaultFormData: PlayerData = {
   },
 };
 
-export default function PlayersList({ players, setPlayers }: PlayersListProps) {
+export default function PlayersList({
+  players,
+  setPlayers,
+  sortOption,
+  sortBy,
+}: PlayersListProps) {
   const [formData, setFormData] = useState<PlayerData>(defaultFormData);
+  const [showAddPlayer, setShowAddPlayer] = useState<boolean>(false);
 
   function handleChange(
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -111,66 +119,76 @@ export default function PlayersList({ players, setPlayers }: PlayersListProps) {
   return (
     <MainContent>
       <SortRow>
-        <Sortby>Sort by</Sortby>
-        <form onSubmit={addPlayer}>
-          <input
-            type="text"
-            name="firstName"
-            placeholder="First Name"
-            value={formData.profile.firstName}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Last Name"
-            value={formData.profile.lastName}
-            onChange={handleChange}
-          />
-          <select
-            name="position"
-            value={formData.profile.position}
-            onChange={handleChange}
-          >
-            <option value="PG">PG</option>
-            <option value="SG">SG</option>
-            <option value="SF">SF</option>
-            <option value="PF">PF</option>
-            <option value="C">C</option>
+        <SortByField>
+          <select value={sortOption} onChange={sortBy}>
+            <option value="">Sort By</option>
+            <option value="asc">Ascending</option>
+            <option value="desc">Desceding</option>
           </select>
-          <select
-            name="gender"
-            value={formData.profile.gender}
-            onChange={handleChange}
-          >
-            <option value="M">Male</option>
-            <option value="F">Female</option>
-          </select>
-          <input
-            type="number"
-            name="weight"
-            placeholder="Weight"
-            value={formData.profile.weight}
-            onChange={handleChange}
-          />
-          <select
-            name="sportId"
-            value={formData.sportId}
-            onChange={handleChange}
-          >
-            {sports.map((sport) => (
-              <option key={sport.id} value={sport.id}>
-                {sport.label}
-              </option>
-            ))}
-          </select>
-          <button>Submit</button>
-        </form>
+        </SortByField>
+
+        {showAddPlayer && (
+          <form onSubmit={addPlayer}>
+            <input
+              type="text"
+              name="firstName"
+              placeholder="First Name"
+              value={formData.profile.firstName}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="lastName"
+              placeholder="Last Name"
+              value={formData.profile.lastName}
+              onChange={handleChange}
+            />
+            <select
+              name="position"
+              value={formData.profile.position}
+              onChange={handleChange}
+            >
+              <option value="PG">PG</option>
+              <option value="SG">SG</option>
+              <option value="SF">SF</option>
+              <option value="PF">PF</option>
+              <option value="C">C</option>
+            </select>
+            <select
+              name="gender"
+              value={formData.profile.gender}
+              onChange={handleChange}
+            >
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+            </select>
+            <input
+              type="number"
+              name="weight"
+              placeholder="Weight"
+              value={formData.profile.weight}
+              onChange={handleChange}
+            />
+            <select
+              name="sportId"
+              defaultValue={formData.sportId}
+              onChange={handleChange}
+            >
+              {sports.map((sport) => (
+                <option key={sport.id} defaultValue={sport.id}>
+                  {sport.label}
+                </option>
+              ))}
+            </select>
+            <button>Submit</button>
+          </form>
+        )}
       </SortRow>
       <ProductGrid>
         {players.map((player: Player) => {
           return <PlayerCard key={player.id} player={player} />;
         })}
+        <div onClick={() => setShowAddPlayer(true)}>Add Player</div>
       </ProductGrid>
     </MainContent>
   );

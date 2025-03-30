@@ -1,6 +1,8 @@
 import { type RefObject, type ChangeEvent } from 'react';
 import styled from 'styled-components';
 
+import { FaTimes } from 'react-icons/fa';
+
 interface FilterProps {
   sports: {
     id: number;
@@ -45,14 +47,28 @@ const FilterOptionLabel = styled.label`
   cursor: pointer;
 `;
 
-const Filter = styled.div`
-  color: red;
+const FilterTags = styled.div`
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
 `;
 
-const DeleteFilter = styled.div`
-  background-color: grey;
-  border-radius: 5px;
+const FilterTag = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 6px 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  font-size: 0.9rem;
+  color: #333;
   cursor: pointer;
+  transition: all 0.2s ease;
+`;
+
+const DeleteFilter = styled(FaTimes)`
+  margin-left: 5px;
 `;
 
 const Search = styled.div``;
@@ -77,16 +93,19 @@ export default function Filters({
           placeholder="Search players"
         />
       </Search>
-      {selectedFilters.map((filter) => {
-        const sportName = sports.find((sport) => sport.id === filter);
-        return (
-          <Filter key={filter}>
-            {sportName?.label}{' '}
-            <DeleteFilter onClick={() => deleteFilter(filter)}>X</DeleteFilter>
-          </Filter>
-        );
-      })}
+
       <FilterLabel>Filters</FilterLabel>
+
+      <FilterTags>
+        {selectedFilters.map((filter) => {
+          const sportName = sports.find((sport) => sport.id === filter);
+          return (
+            <FilterTag key={filter} onClick={() => deleteFilter(filter)}>
+              {sportName?.label} <DeleteFilter />
+            </FilterTag>
+          );
+        })}
+      </FilterTags>
       <FilterOptions>
         {sports.map((sport) => {
           const sportName = sport.label.toLocaleLowerCase();

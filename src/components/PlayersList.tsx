@@ -13,11 +13,6 @@ import styled from 'styled-components';
 
 const { sports } = config;
 
-const MainContent = styled.main`
-  flex: 1;
-  padding: 2rem;
-`;
-
 const SortRow = styled.div`
   display: flex;
   justify-content: end;
@@ -26,7 +21,7 @@ const SortRow = styled.div`
 
 const SortByField = styled.div``;
 
-const ProductGrid = styled.div`
+const PlayerGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 2rem;
@@ -90,12 +85,13 @@ export default function PlayersList({
         id: Date.now(),
         sportId: formData.sportId,
         profile: {
-          firstName: formData.profile.firstName,
-          lastName: formData.profile.lastName,
-          position: formData.profile.position,
-          gender: formData.profile.gender,
-          weight: formData.profile.weight,
-          //...formData.profile, <!-- this is same as above
+          // firstName: formData.profile.firstName,
+          // lastName: formData.profile.lastName,
+          // position: formData.profile.position,
+          // gender: formData.profile.gender,
+          // weight: formData.profile.weight,
+          // below is the same as above
+          ...formData.profile,
         },
       };
       return [newPlayer, ...prev];
@@ -117,7 +113,7 @@ export default function PlayersList({
   }
 
   return (
-    <MainContent>
+    <>
       <SortRow>
         <SortByField>
           <select value={sortOption} onChange={sortBy}>
@@ -184,12 +180,12 @@ export default function PlayersList({
           </form>
         )}
       </SortRow>
-      <ProductGrid>
+      <PlayerGrid>
         {players.map((player: Player) => {
           return <PlayerCard key={player.id} player={player} />;
         })}
         <div onClick={() => setShowAddPlayer(true)}>Add Player</div>
-      </ProductGrid>
-    </MainContent>
+      </PlayerGrid>
+    </>
   );
 }

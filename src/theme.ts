@@ -10,4 +10,12 @@ export const theme = {
     base: '1rem',
     large: '1.5rem',
   },
+  widths: {
+    maxWidth: '1280px',
+  },
+  // breakpoints: {
+  //   mobile: max-width: 767px
+  //   tablet: 768px to 1023px
+  //   desktop: min-width: 1024px
+  // }
 };

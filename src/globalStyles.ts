@@ -85,4 +85,20 @@ export const GlobalStyle = createGlobalStyle`
     margin-right: 0.5rem;
     accent-color: #003366;
   }
+
+  a {
+    color: #003366;
+    text-decoration: none;
+    transition: color 0.2s ease, border-bottom 0.2s ease;
+    font-weight: 500;
+  }
+
+  a:hover {
+    color: #001f4d;
+    border-bottom: 2px solid #003366;
+  }
+
+  a:active {
+    color: #002244;
+  }
 `;

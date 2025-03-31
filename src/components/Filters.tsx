@@ -12,22 +12,7 @@ interface FilterProps {
   filterChange: (event: ChangeEvent<HTMLInputElement>) => void;
   deleteFilter: (id: number) => void;
   inputRefs: RefObject<HTMLInputElement[]>;
-  searchInput: string;
-  searchResults: (event: ChangeEvent<HTMLInputElement>) => void;
 }
-
-const FilterContainer = styled.aside`
-  width: 250px;
-  padding: 2rem;
-  background: #f7f7f7;
-  border-right: 1px solid #ddd;
-
-  @media (max-width: 768px) {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid #ddd;
-  }
-`;
 
 const FilterLabel = styled.h2`
   margin-bottom: 1rem;
@@ -71,32 +56,17 @@ const DeleteFilter = styled(FaTimes)`
   margin-left: 5px;
 `;
 
-const Search = styled.div``;
-
 export default function Filters({
   sports,
   selectedFilters,
   filterChange,
   deleteFilter,
   inputRefs,
-  searchInput,
-  searchResults,
 }: FilterProps) {
   return (
-    <FilterContainer>
-      <Search>
-        <FilterLabel>Search</FilterLabel>
-        <input
-          type="text"
-          value={searchInput}
-          onChange={searchResults}
-          placeholder="Search players"
-        />
-      </Search>
-
-      <FilterLabel>Filters</FilterLabel>
-
+    <>
       <FilterTags>
+        <FilterLabel>Filters</FilterLabel>
         {selectedFilters.map((filter) => {
           const sportName = sports.find((sport) => sport.id === filter);
           return (
@@ -128,6 +98,6 @@ export default function Filters({
           );
         })}
       </FilterOptions>
-    </FilterContainer>
+    </>
   );
 }

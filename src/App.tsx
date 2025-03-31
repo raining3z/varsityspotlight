@@ -5,17 +5,43 @@ import { players as playersData, Player } from './data';
 import config from './config';
 import Filters from './components/Filters';
 import { useEffect, useState, type ChangeEvent, useRef } from 'react';
+import Header from './components/Header';
+import SearchField from './components/Search';
 
 const { sports } = config;
 
-const Grid = styled.div`
+const MainContainer = styled.div`
+  padding-top: 50px;
+`;
+
+const Body = styled.div`
   display: flex;
+  max-width: ${({ theme }) => theme.widths.maxWidth};
+  margin: 0 auto;
   min-height: 100vh;
   flex-wrap: wrap;
 
   @media (max-width: 768px) {
     flex-direction: column;
   }
+`;
+
+const LeftNav = styled.div`
+  width: 250px;
+  padding: 2rem;
+  background: #f7f7f7;
+  border-right: 1px solid #ddd;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+`;
+
+const Grid = styled.div`
+  flex: 1;
+  padding: 2rem;
 `;
 
 function lowercase(value: string) {
@@ -63,16 +89,16 @@ export default function App() {
     setSortOption(value);
   }
 
-  function showSortOption(option: string, data: Player[]) {
-    if (option === 'desc') {
-      data.sort((a, b) => b.profile.lastName.localeCompare(a.profile.lastName));
-    } else {
-      data.sort((a, b) => a.profile.lastName.localeCompare(b.profile.lastName));
-    }
-  }
+  // function showSortOption(option: string, data: Player[]) {
+  //   if (option === 'desc') {
+  //     data.sort((a, b) => b.profile.lastName.localeCompare(a.profile.lastName));
+  //   } else {
+  //     data.sort((a, b) => a.profile.lastName.localeCompare(b.profile.lastName));
+  //   }
+  // }
 
   useEffect(() => {
-    console.log(sortOption);
+    // console.log(sortOption);
     setPlayers(
       playersData.sort((a, b) =>
         a.profile.lastName.localeCompare(b.profile.lastName)
@@ -102,22 +128,32 @@ export default function App() {
   }, [searchInput, selectedFilters, sortOption]);
 
   return (
-    <Grid>
-      <Filters
-        sports={sports}
-        selectedFilters={selectedFilters}
-        filterChange={filterChange}
-        deleteFilter={deleteFilter}
-        inputRefs={inputRefs}
-        searchInput={searchInput}
-        searchResults={searchResults}
-      />
-      <PlayersList
-        players={players}
-        setPlayers={setPlayers}
-        sortOption={sortOption}
-        sortBy={sortBy}
-      />
-    </Grid>
+    <MainContainer>
+      <Header />
+      <Body>
+        <LeftNav>
+          <SearchField
+            searchInput={searchInput}
+            searchResults={searchResults}
+          />
+          <Filters
+            sports={sports}
+            selectedFilters={selectedFilters}
+            filterChange={filterChange}
+            deleteFilter={deleteFilter}
+            inputRefs={inputRefs}
+          />
+        </LeftNav>
+
+        <Grid>
+          <PlayersList
+            players={players}
+            setPlayers={setPlayers}
+            sortOption={sortOption}
+            sortBy={sortBy}
+          />
+        </Grid>
+      </Body>
+    </MainContainer>
   );
 }

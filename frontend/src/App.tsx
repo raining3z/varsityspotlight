@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import PlayersList from './components/PlayersList';
-import { players as playersData, Player } from './data';
+import { Player } from './data';
 import config from './config';
 import Filters from './components/Filters';
 import { useEffect, useState, type ChangeEvent, useRef } from 'react';
@@ -97,34 +97,48 @@ export default function App() {
   //   }
   // }
 
+  // TODO: add try/catch to all awaits
+  // TODO: console.error OR throw new Error??
+
   useEffect(() => {
-    // console.log(sortOption);
-    setPlayers(
-      playersData.sort((a, b) =>
-        a.profile.lastName.localeCompare(b.profile.lastName)
-      )
-    );
+    async function getTesting() {
+      try {
+        const result = await fetch('/api/players');
+        const players: Player[] = await result.json();
 
-    if (searchInput.length > 0) {
-      setPlayers((prev) =>
-        prev.filter((player) => {
-          const firstName = lowercase(player.profile.firstName);
-          const lastName = lowercase(player.profile.lastName);
-          const searchInputValue = lowercase(searchInput);
+        // console.log(sortOption);
+        setPlayers(
+          players.sort((a, b) =>
+            a.profile.lastName.localeCompare(b.profile.lastName)
+          )
+        );
 
-          return (
-            firstName.includes(lowercase(searchInputValue)) ||
-            lastName.includes(lowercase(searchInputValue))
+        if (searchInput.length > 0) {
+          setPlayers((prev) =>
+            prev.filter((player) => {
+              const firstName = lowercase(player.profile.firstName);
+              const lastName = lowercase(player.profile.lastName);
+              const searchInputValue = lowercase(searchInput);
+
+              return (
+                firstName.includes(lowercase(searchInputValue)) ||
+                lastName.includes(lowercase(searchInputValue))
+              );
+            })
           );
-        })
-      );
+        }
+
+        if (selectedFilters.length > 0) {
+          setPlayers((prev) =>
+            prev.filter((player) => selectedFilters.includes(player.sportId))
+          );
+        }
+      } catch (err) {
+        console.error('Fetch failed:', err);
+      }
     }
 
-    if (selectedFilters.length > 0) {
-      setPlayers((prev) =>
-        prev.filter((player) => selectedFilters.includes(player.sportId))
-      );
-    }
+    getTesting();
   }, [searchInput, selectedFilters, sortOption]);
 
   return (

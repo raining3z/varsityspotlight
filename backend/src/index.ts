@@ -1,45 +1,18 @@
-export interface Player {
-  id: number;
-  sportId: number;
-  // sportId: number;
-  // createdBy: string;
-  // active: boolean;
-  profile: {
-    firstName: string;
-    lastName: string;
-    gender: string;
-    position: string;
-    // positionLong: string;
-    // height: string;
-    weight: number;
-    // wingspan: string;
-    // verticalLeap: number;
-  };
-  // school: {
-  //   schoolName: string;
-  //   city: string;
-  //   state: string;
-  //   schoolUrl: string;
-  //   gpa: number;
-  //   graduationYear: number;
-  // };
-  // skills: string[];
-  // highlights: string;
-  // coachNotes: string;
-  // committed: string;
-  // social: {
-  //   twitter: string;
-  //   facebook: string;
-  //   linkedin: string;
-  //   instagram: string;
-  // };
-  // image: string;
-  // stats: {
-  //   [key: string]: number;
-  // };
-}
+const express = require('express');
 
-export const players: Player[] = [
+const parser = require('body-parser');
+
+const cors = require('cors'); // localhost only: this is needed for React to hit backend port
+
+import type { Express, Request, Response, NextFunction } from 'express';
+
+const app: Express = express();
+
+app.use(cors()); // localhost only: this is needed for React to hit backend port
+
+app.use(parser.json());
+
+const players = [
   {
     id: 1,
     sportId: 1,
@@ -48,11 +21,7 @@ export const players: Player[] = [
       lastName: 'Chase',
       gender: 'F',
       position: 'PF',
-      // positionLong: 'Power Forward',
-      // height: '6\'4"',
       weight: 0,
-      // wingspan: '6\'10"',
-      // verticalLeap: 79,
     },
   },
   {
@@ -63,11 +32,7 @@ export const players: Player[] = [
       lastName: 'Walls',
       gender: 'M',
       position: 'OL',
-      // positionLong: 'Offensive Line',
-      // height: '6\'11"',
       weight: 230,
-      // wingspan: '6\'3"',
-      // verticalLeap: 26,
     },
   },
   {
@@ -78,11 +43,7 @@ export const players: Player[] = [
       lastName: 'Brooks',
       gender: 'M',
       position: 'CF',
-      // positionLong: 'Center Forward',
-      // height: '6\'2"',
       weight: 185,
-      // wingspan: '6\'6"',
-      // verticalLeap: 34,
     },
   },
   {
@@ -185,3 +146,16 @@ export const players: Player[] = [
     },
   },
 ];
+app.get('/api/players', (req: Request, res: Response, next: NextFunction) => {
+  console.log('✅ Backend hit: /api/players');
+
+  res.status(200).json(players);
+});
+
+app.post('/api/players', (req: Request, res: Response, next: NextFunction) => {
+  players.push(req.body);
+
+  res.status(201).json({ message: 'New player added' });
+});
+
+app.listen(3000);

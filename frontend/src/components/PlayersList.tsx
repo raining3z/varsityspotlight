@@ -77,25 +77,48 @@ export default function PlayersList({
     }
   }
 
-  function addPlayer(event: FormEvent) {
+  async function addPlayer(event: FormEvent) {
     event.preventDefault();
 
-    setPlayers((prev) => {
-      const newPlayer = {
-        id: Date.now(),
-        sportId: formData.sportId,
-        profile: {
-          // firstName: formData.profile.firstName,
-          // lastName: formData.profile.lastName,
-          // position: formData.profile.position,
-          // gender: formData.profile.gender,
-          // weight: formData.profile.weight,
-          // below is the same as above
-          ...formData.profile,
-        },
-      };
-      return [newPlayer, ...prev];
+    const newPlayer: Player = {
+      id: Date.now(),
+      sportId: formData.sportId,
+      profile: {
+        // firstName: formData.profile.firstName,
+        // lastName: formData.profile.lastName,
+        // position: formData.profile.position,
+        // gender: formData.profile.gender,
+        // weight: formData.profile.weight,
+        // below is the same as above
+        ...formData.profile,
+      },
+    };
+
+    // TODO: try/catch
+    const response = await fetch('/api/players', {
+      method: 'POST',
+      body: JSON.stringify(newPlayer),
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
+
+    // setPlayers((prev) => {
+    //   const newPlayer = {
+    //     id: Date.now(),
+    //     sportId: formData.sportId,
+    //     profile: {
+    //       // firstName: formData.profile.firstName,
+    //       // lastName: formData.profile.lastName,
+    //       // position: formData.profile.position,
+    //       // gender: formData.profile.gender,
+    //       // weight: formData.profile.weight,
+    //       // below is the same as above
+    //       ...formData.profile,
+    //     },
+    //   };
+    //   return [newPlayer, ...prev];
+    // });
 
     setFormData(defaultFormData);
 
